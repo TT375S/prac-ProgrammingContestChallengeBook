@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <stdio.h>
+
 typedef std::vector<std::vector<long long> > matrix;
 typedef long long ll;
 
@@ -61,21 +62,30 @@ matrix mat_pow(matrix &A, int exp){
     return ANS;
 }
 
-
-
 int main(){
-    int n;
-    std::cin >> n;
-    matrix A(3, std::vector<ll>(3));
+    int n, k;
+    std::cin >> n >> k;
+    matrix G(n, std::vector<ll>(n, 0));
+   
+    int tmpU, tmpV;
+    while(std::cin >> tmpU >> tmpV){
+        tmpU -= 1;
+        tmpV -= 1;
+        G[tmpU][tmpV] = 1;
+    } 
     
-    A[0][0] = 2; A[0][1] = 1; A[0][2] = 0;
-    A[1][0] = 2; A[1][1] = 2; A[1][2] = 2;
-    A[2][0] = 0; A[2][1] = 1; A[2][2] = 2;
+    matrix ANS(n, std::vector<ll>(n));
     
-    matrix ANS(3, std::vector<ll>(3));
-    
-    ANS = mat_pow(A, n);
-    printf("%lld\n", ANS[0][0]);
+    G = mat_pow(G, k);
+
+    ll sum = 0;
+    for(int u=0; u<n; u++){
+        for(int v=0; v<n; v++){
+            sum += G[u][v];
+        }
+    }
+
+    printf("%lld\n", sum);
     return 0;
 }
 

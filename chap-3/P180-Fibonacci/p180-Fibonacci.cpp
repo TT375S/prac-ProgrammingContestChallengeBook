@@ -1,7 +1,8 @@
 #include <iostream>
 #include <vector>
+#include <stdio.h>
 
-typedef std::vector<std::vector<long long>> matrix;
+typedef std::vector<std::vector<long long> > matrix;
 typedef long long ll;
 
 void mat_print(matrix &A){
