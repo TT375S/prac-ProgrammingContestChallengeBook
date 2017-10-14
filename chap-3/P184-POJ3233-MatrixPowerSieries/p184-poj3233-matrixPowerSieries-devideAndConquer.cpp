@@ -6,6 +6,9 @@
 typedef std::vector<std::vector<long long> > matrix;
 typedef long long ll;
 
+int n,k,M;
+std::map<int, matrix > memo;
+
 void mat_print(const matrix &A){
     for(int r=0; r<A.size(); r++){
         for(int c=0; c<A[0].size(); c++){
@@ -43,6 +46,7 @@ matrix mat_mul(const matrix &A, const matrix &B){
 
 matrix mat_add(const matrix &A, const matrix &B){
     matrix ANS(A.size(), std::vector<ll>(A[0].size() ) ); 
+    //行列のサイズが違うと和がとれない
     if(A.size() != B.size() ) return ANS;
     if(A[0].size() != B[0].size() ) return ANS;
     
@@ -80,18 +84,7 @@ matrix mat_pow(const matrix &A, int exp){
     return ANS;
 }
 
-int n,k,M;
-matrix I(n, std::vector<ll>(n) );
-std::map<int, matrix > memo;
-
 matrix rec(const matrix &A, int len){
-    if(len == 0){
-        matrix zero(A.size(), std::vector<ll>(A[0].size()) );
-        return zero;
-    }
-    if(len == 1){
-        return I;
-    }
     if(memo.count(len) > 0){
         return memo[len];
     }
@@ -117,6 +110,7 @@ matrix rec(const matrix &A, int len){
 
 int main(){
     std::cin >> n >> k >> M;
+    matrix I(n, std::vector<ll>(n) );
     
     for(int row=0; row<n; row++){
         for(int column=0;  column<n; column++){
@@ -131,8 +125,11 @@ int main(){
             std::cin >> A[row][column];   
         }   
     }
+    
+    memo[0] = I;
+    memo[1] = A;
 
-    //TODO: %Mをやり忘れてる 
+    ////TODO: %Mをやり忘れてる 
     mat_print(rec(A, k) );
     return 0;
 }
