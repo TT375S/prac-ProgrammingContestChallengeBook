@@ -18,3 +18,4 @@ S_k = I + A + ... + A^(k-1)
 ## 
 
 # 参考
+<http://area.hateblo.jp/entry/2017/01/28/023755>
