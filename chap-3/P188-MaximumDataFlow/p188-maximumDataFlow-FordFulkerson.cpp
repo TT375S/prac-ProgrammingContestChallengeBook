@@ -29,8 +29,8 @@ int dfs(int origin, int target, int flow){
     
     isUsedNode[origin] = true;
     
-    for(int ind_node=0; ind_node < G[origin].size(); ind_node++){
-        edge &currentEdge = G[origin][ind_node];
+    for(int ind_edge=0; ind_edge < G[origin].size(); ind_edge++){
+        edge &currentEdge = G[origin][ind_edge];
         
         bool isNotTriedAndReachableNode = !isUsedNode[currentEdge.to] && currentEdge.cap > 0;
         if(isNotTriedAndReachableNode){
