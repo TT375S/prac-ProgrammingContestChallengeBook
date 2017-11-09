@@ -19,3 +19,5 @@ res += d* (dist[t] - (h(s) - h(t)) );
 
 #  参考
 [ベルマンフォード法](https://qiita.com/intatonix/items/8a50556697206ee89bcd)
+[フローの話。蟻本のはdist(s,v)をh(v)に積算していくとか書いてある] (https://gist.github.com/satos---jp/711c056cb63af7fbccb569f98a086b06)
+[これも同上](https://www.slideshare.net/Drafaer/kmc-advanced-3)
