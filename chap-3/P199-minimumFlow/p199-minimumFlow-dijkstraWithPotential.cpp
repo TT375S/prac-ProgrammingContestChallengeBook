@@ -83,7 +83,7 @@ int min_cost_flow(int ind_startNode, int ind_endNode, int flow){
 
         flow -= d;
         //通信料金は 毎秒の通信サイズ*通信料単価
-        res += d * V[ind_endNode].dist;
+        res += d * h[ind_endNode];
         //本来、d'(e) = d(e) + h(u) - h(v)だから、d(e) = d'(e) - {h(u) - h(v)}では？
         //res += d * (V[ind_endNode].dist - (h[ind_startNode] - h[ind_endNode]) );
 
