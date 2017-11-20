@@ -20,19 +20,12 @@ vector<edge> G[MAX_V];
 struct node {int dist, prevV, prevE;};
 vector<node> V;
 
-int h[MAX_V]; //ポテンシャル。ノードs-u間の最短距離と本では説明されているが、なぜかソースコードでは各iの残余グラフ上でのs-u間の最短距離を積算している。理解できませんでした
-
 int min_cost_flow(int ind_startNode, int ind_endNode, int flow){
     int res = 0;
 
-    //ポテンシャルの初期化
-    for(int i=0; i<V.size(); i++){
-        h[i] = 0;
-    }
-
     //流量が規定に到達するまで流せる経路を繰り返し探してそこに流す
     while(flow > 0){
-        //ダイクストラ法でポテンシャルhを更新する...らしい
+        //ダイクストラ法
         
         //ノード初期化。未到達の区別のため距離を無限で初期化さえすれば良い
         for(int i=0; i<V.size(); i++){
@@ -55,10 +48,9 @@ int min_cost_flow(int ind_startNode, int ind_endNode, int flow){
             for(int ind_e = 0; ind_e < G[ind_v].size(); ind_e++){
                 edge &e = G[ind_v][ind_e];
                 bool isFlowable = e.cap > 0;
-                bool isMinUpdatable = V[e.to].dist > V[ind_v].dist + e.cost + h[ind_v] - h[e.to];
+                bool isMinUpdatable = V[e.to].dist > V[ind_v].dist + e.cost;
                 if(isFlowable && isMinUpdatable){
-                    //ポテンシャルを使うことにより、distは常に0以上になるのでダイクストラ法が使える
-                    V[e.to].dist = V[ind_v].dist + e.cost + h[ind_v] - h[e.to];
+                    V[e.to].dist = V[ind_v].dist + e.cost;
                     V[e.to].prevV = ind_v;
                     V[e.to].prevE = ind_e;
                     que.push(P(V[e.to].dist, e.to));
@@ -72,9 +64,6 @@ int min_cost_flow(int ind_startNode, int ind_endNode, int flow){
             return -1;
         }
 
-        //hに、このときの残余グラフでのs-u間最短距離を「積算」する。なぜかは不明。本ではh(v) = (s-v間の最短距離)と書かれているのだが...
-        for(int i=0; i<V.size(); i++) {h[i] += V[i].dist; }
-
         //経路の最小容量を求める
         int d = flow;
         for(int ind_v = ind_endNode; ind_v != ind_startNode; ind_v = V[ind_v].prevV){
@@ -83,9 +72,7 @@ int min_cost_flow(int ind_startNode, int ind_endNode, int flow){
 
         flow -= d;
         //通信料金は 毎秒の通信サイズ*通信料単価
-        res += d * V[ind_endNode].dist;
-        //本来、d'(e) = d(e) + h(u) - h(v)だから、d(e) = d'(e) - {h(u) - h(v)}では？
-        //res += d * (V[ind_endNode].dist - (h[ind_startNode] - h[ind_endNode]) );
+        res += d*V[ind_endNode].dist;
 
         //辺の容量を更新
         for(int ind_v = ind_endNode; ind_v != ind_startNode; ind_v = V[ind_v].prevV){
@@ -148,7 +135,7 @@ int main(){
         for(int ind_fact=0; ind_fact < M; ind_fact++){
             for(int factor_N = 1; factor_N <= N; factor_N++){
                 //容量1、コストZ_ik * factNの辺を、toyとfactoryの間にはる
-                int ind_fact_Nth = N+(ind_fact*M + (factor_N-1));
+                int ind_fact_Nth = N+(ind_fact*N + (factor_N-1));
                 int cost_fact_Nth = Z[ind_toy][ind_fact] * factor_N;
                 add_edge(ind_toy, ind_fact_Nth, 1, cost_fact_Nth);
             }
@@ -163,11 +150,12 @@ int main(){
     //factoryからtへ、容量1、コスト0の辺をはる
     for(int ind_fact=0; ind_fact < M; ind_fact++){
         for(int factor_N = 1; factor_N <= N; factor_N++){
-            add_edge(N+(ind_fact*M + (factor_N-1)), t,1 ,0);
+            int ind_fact_Nth = N+(ind_fact*N + (factor_N-1));
+            add_edge(ind_fact_Nth, t, 1 ,0);
         }
     }
     
-    printf("%d\n", min_cost_flow(s, t, f));
+    printf("%f\n", (double)min_cost_flow(s, t, f)/N);
 
     return 0;
 }
